@@ -8,7 +8,6 @@ import { CCProps, createState } from "ags";
 import { timeout } from "ags/time";
 import { config, theme } from "@/options";
 import Adw from "gi://Adw?version=1";
-import { Timer } from "@/src/lib/timer";
 import { icons } from "@/src/lib/icons";
 const { margin } = theme.window;
 
@@ -165,18 +164,52 @@ export function PopupNotification({
 }) {
    const [revealed, setRevealed] = createState(false);
 
-   const timer = new Timer(config.notifications.timeout * 1000);
+   const hideNotification = () => {
+      timeoutHandle?.cancel();
+      timeoutHandle = null;
+      setRevealed(false);
+      timeout(config.transition * 100 + 100, () => onHide && onHide(n));
+   };
 
-   timer.subscribe(async () => {
-      setRevealed(true);
-      if (timer.timeLeft <= 0) {
-         setRevealed(false);
+   const timeoutMs = config.notifications.timeout * 1000;
+   let remainingMs = timeoutMs;
+   let startTime = GLib.get_monotonic_time();
+   let paused = false;
+   let timeoutHandle: ReturnType<typeof timeout> | null = null;
 
-         timeout(config.transition * 100 + 100, () => onHide && onHide(n));
+   const scheduleHide = () => {
+      timeoutHandle?.cancel();
+      startTime = GLib.get_monotonic_time();
+      timeoutHandle = timeout(remainingMs, () => {
+         timeoutHandle = null;
+         hideNotification();
+      });
+   };
+
+   const pause = () => {
+      if (paused) return;
+      paused = true;
+      if (timeoutHandle) {
+         timeoutHandle.cancel();
+         timeoutHandle = null;
+         const now = GLib.get_monotonic_time();
+         const elapsedMs = (now - startTime) / 1000;
+         remainingMs = Math.max(0, remainingMs - elapsedMs);
       }
-   });
+   };
 
-   timer.start();
+   const resume = () => {
+      if (!paused) return;
+      paused = false;
+      if (remainingMs <= 0) {
+         hideNotification();
+         return;
+      }
+      scheduleHide();
+   };
+
+   setRevealed(true);
+   scheduleHide();
 
    return (
       <revealer
@@ -189,12 +222,14 @@ export function PopupNotification({
          revealChild={revealed}
       >
          <Gtk.EventControllerMotion
-            onEnter={() => timer.pause()}
-            onLeave={() => timer.resume()}
+            onEnter={pause}
+            onLeave={resume}
          />
          <Notification
             n={n}
-            onClose={() => (timer.timeLeft = 0)}
+            onClose={() => {
+               hideNotification();
+            }}
             marginTop={margin / 2}
             marginBottom={margin / 2}
          />

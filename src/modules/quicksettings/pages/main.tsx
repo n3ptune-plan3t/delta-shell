@@ -6,7 +6,6 @@ import { BatteryIcon, icons } from "@/src/lib/icons";
 import AstalBattery from "gi://AstalBattery?version=0.1";
 import { bash, toggleWindow } from "@/src/lib/utils";
 import { createBinding } from "ags";
-import { timeout } from "ags/time";
 import { config, theme } from "@/options";
 import { windows_names } from "@/windows";
 const battery = AstalBattery.get_default();
