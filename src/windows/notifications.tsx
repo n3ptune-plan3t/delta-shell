@@ -100,43 +100,9 @@ export function NotificationsWindow() {
       }
    }
 
-   let inputRegionScheduled = false;
-   const updateInputRegion = () => {
-      const [_success, bounds] = contentbox.compute_bounds(win);
-
-      const height = bounds.get_height();
-      const width = bounds.get_width();
-      const x = bounds.get_x();
-      const y = bounds.get_y();
-
-      const region = new giCairo.Region();
-
-      // @ts-expect-error
-      region.unionRectangle(
-         new giCairo.Rectangle({
-            x,
-            y,
-            width,
-            height,
-         }),
-      );
-
-      win.get_native()?.get_surface()?.set_input_region(region);
-   };
-
-   const scheduleInputRegionUpdate = () => {
-      if (inputRegionScheduled) return;
-      inputRegionScheduled = true;
-      GLib.idle_add(GLib.PRIORITY_DEFAULT_IDLE, () => {
-         inputRegionScheduled = false;
-         updateInputRegion();
-         return GLib.SOURCE_REMOVE;
-      });
-   };
-
    const unsub = notifications.subscribe(() => {
+      // trigger layout; size-allocate handler updates input region
       contentbox.queue_resize();
-      scheduleInputRegionUpdate();
    });
 
    return (
@@ -155,7 +121,28 @@ export function NotificationsWindow() {
          <box
             $={(self) => {
                contentbox = self;
-               scheduleInputRegionUpdate();
+               contentbox.connect("size-allocate", () => {
+                  const [_success, bounds] = contentbox.compute_bounds(win);
+
+                  const height = bounds.get_height();
+                  const width = bounds.get_width();
+                  const x = bounds.get_x();
+                  const y = bounds.get_y();
+
+                  const region = new giCairo.Region();
+
+                  // @ts-expect-error
+                  region.unionRectangle(
+                     new giCairo.Rectangle({
+                        x,
+                        y,
+                        width,
+                        height,
+                     }),
+                  );
+
+                  win.get_native()?.get_surface()?.set_input_region(region);
+               });
             }}
             orientation={Gtk.Orientation.VERTICAL}
             halign={halign()}
