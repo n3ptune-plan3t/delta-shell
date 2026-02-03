@@ -6,7 +6,6 @@ import Pango from "gi://Pango?version=1.0";
 import Gio from "gi://Gio?version=2.0";
 import GLib from "gi://GLib?version=2.0";
 import app from "ags/gtk4/app";
-import { timeout } from "ags/time";
 import { theme } from "@/options";
 import { qs_page_set } from "../quicksettings/quicksettings";
 import { getAppInfo } from "@/src/lib/utils";

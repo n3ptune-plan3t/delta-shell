@@ -7,13 +7,9 @@ import { createBinding, createComputed, For } from "ags";
 import { resetCss } from "@/src/services/styles";
 import { QSButton } from "@/src/widgets/qsbutton";
 import { config, theme } from "@/options";
-import ScreenRecorder from "@/src/services/screenrecorder";
-import { timeout } from "ags/time";
 import Adw from "gi://Adw?version=1";
-import { dependencies } from "@/src/lib/utils";
 import { qs_page_set } from "../quicksettings";
 import { profiles_names } from "../../power/power";
-import Weather from "@/src/services/weather";
 import AstalNotifd from "gi://AstalNotifd?version=0.1";
 import { FunctionsList } from "@/src/widgets/baritem";
 const network = AstalNetwork.get_default();
@@ -27,9 +23,6 @@ const Buttons = {
    bluetooth: () => (bluetooth.adapter !== null ? <BluetoothButton /> : null),
    power: () =>
       powerprofile.get_profiles().length !== 0 ? <PowerProfilesButton /> : null,
-   screenrecord: () =>
-      dependencies("gpu-screen-recorder") ? <ScreenRecordButton /> : null,
-   weather: () => config.weather.enabled && <WeatherButton />,
    notifications: () => config.notifications.enabled && <NotificationsButton />,
    volume: () => <VolumeButton />,
    microphone: () => <MicrophoneButton />,
@@ -199,39 +192,6 @@ function InternetButton() {
    );
 }
 
-function ScreenRecordButton() {
-   const screenRecord = ScreenRecorder.get_default();
-   const recording = createBinding(screenRecord, "recording");
-   const timer = createBinding(screenRecord, "timer");
-
-   const progress = createComputed(() => {
-      if (recording()) {
-         const time = timer();
-         const sec = time % 60;
-         const min = Math.floor(time / 60);
-         return `${min}:${sec < 10 ? "0" + sec : sec}`;
-      } else return "";
-   });
-
-   return (
-      <QSButton
-         icon={icons.video}
-         label={"Screen Record"}
-         subtitle={progress.as((progress) =>
-            progress !== "" ? progress : "None",
-         )}
-         onClicked={() => {
-            if (screenRecord.recording) screenRecord.stop();
-            else screenRecord.start();
-         }}
-         ButtonClasses={recording((p) => {
-            const classes = ["qs-button-box"];
-            p && classes.push("active");
-            return classes;
-         })}
-      />
-   );
-}
 
 function BluetoothButton() {
    const powered = createBinding(bluetooth, "isPowered");
@@ -263,35 +223,6 @@ function BluetoothButton() {
    );
 }
 
-function WeatherButton() {
-   const weather = Weather.get_default();
-   const data = createBinding(weather, "data");
-
-   const temp = createComputed(() => {
-      const hourly = data().hourly;
-      if (!hourly) return "";
-      const current = hourly[0];
-      return `${current.temperature}${current.units.temperature}`;
-   });
-
-   const icon = data((data) => {
-      if (!data.hourly) return icons.weather.clear.day;
-
-      const current = data.hourly[0];
-      return current.icon;
-   });
-
-   return (
-      <QSButton
-         icon={icon}
-         label={"Weather"}
-         subtitle={temp((temp) => (temp !== "" ? temp : "None"))}
-         arrow={"inside"}
-         onClicked={() => qs_page_set("weather")}
-         ButtonClasses={["qs-button-box-arrow-inside"]}
-      />
-   );
-}
 
 function NotificationsButton() {
    const enabled = createBinding(notifd, "dontDisturb");

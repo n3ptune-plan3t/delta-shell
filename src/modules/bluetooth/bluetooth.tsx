@@ -1,7 +1,6 @@
 import { icons } from "@/src/lib/icons";
 import { Gtk } from "ags/gtk4";
 import AstalBluetooth from "gi://AstalBluetooth?version=0.1";
-import { timeout } from "ags/time";
 import { createBinding, createComputed, For } from "ags";
 import { theme } from "@/options";
 import { qs_page, qs_page_set } from "../quicksettings/quicksettings";
@@ -89,17 +88,15 @@ function Item({ device }: ItemProps) {
 
             console.log(`Bluetooth: connecting to '${device.name}'`);
 
-            timeout(100, () => {
-               device.connect_device((result, error) => {
-                  if (error) {
-                     console.error(
-                        `Bluetooth: failed to connect to '${device.name}':`,
-                        error,
-                     );
-                  } else {
-                     console.log(`Bluetooth: connected to '${device.name}'`);
-                  }
-               });
+            device.connect_device((result, error) => {
+               if (error) {
+                  console.error(
+                     `Bluetooth: failed to connect to '${device.name}':`,
+                     error,
+                  );
+               } else {
+                  console.log(`Bluetooth: connected to '${device.name}'`);
+               }
             });
          }}
          focusOnClick={false}

@@ -12,7 +12,6 @@ import GLib from "gi://GLib";
 import giCairo from "gi://cairo";
 import { config, theme } from "@/options";
 import { windows_names } from "@/windows";
-import { timeout } from "ags/time";
 import {
    Notification,
    PopupNotification,
@@ -102,28 +101,8 @@ export function NotificationsWindow() {
    }
 
    const unsub = notifications.subscribe(() => {
-      timeout(100, () => {
-         const [_success, bounds] = contentbox.compute_bounds(win);
-
-         const height = bounds.get_height();
-         const width = bounds.get_width();
-         const x = bounds.get_x();
-         const y = bounds.get_y();
-
-         const region = new giCairo.Region();
-
-         // @ts-expect-error
-         region.unionRectangle(
-            new giCairo.Rectangle({
-               x,
-               y,
-               width,
-               height,
-            }),
-         );
-
-         win.get_native()?.get_surface()?.set_input_region(region);
-      });
+      // trigger layout; size-allocate handler updates input region
+      contentbox.queue_resize();
    });
 
    return (
@@ -140,7 +119,31 @@ export function NotificationsWindow() {
          }}
       >
          <box
-            $={(self) => (contentbox = self)}
+            $={(self) => {
+               contentbox = self;
+               contentbox.connect("size-allocate", () => {
+                  const [_success, bounds] = contentbox.compute_bounds(win);
+
+                  const height = bounds.get_height();
+                  const width = bounds.get_width();
+                  const x = bounds.get_x();
+                  const y = bounds.get_y();
+
+                  const region = new giCairo.Region();
+
+                  // @ts-expect-error
+                  region.unionRectangle(
+                     new giCairo.Rectangle({
+                        x,
+                        y,
+                        width,
+                        height,
+                     }),
+                  );
+
+                  win.get_native()?.get_surface()?.set_input_region(region);
+               });
+            }}
             orientation={Gtk.Orientation.VERTICAL}
             halign={halign()}
             valign={valign()}
