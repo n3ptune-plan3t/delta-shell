@@ -1,9 +1,6 @@
 import app from "ags/gtk4/app";
-import ScreenRecorder from "./src/services/screenrecorder";
 import { windows_names } from "./windows";
-import { hasBarItem, toggleQsModule, toggleWindow } from "./src/lib/utils";
-import { config } from "./options";
-const screenrecorder = ScreenRecorder.get_default();
+import { toggleQsModule, toggleWindow } from "./src/lib/utils";
 
 export default function request(
    args: string[],
@@ -25,9 +22,6 @@ export default function request(
             break;
          case "clipboard":
             toggleWindow(windows_names.clipboard);
-            break;
-         case "weather":
-            toggleQsModule("weather");
             break;
          case "notificationslist":
             toggleQsModule("notificationslist");
@@ -52,9 +46,6 @@ export default function request(
       return response("ok");
    } else {
       switch (args[0]) {
-         case "screenrecord":
-            screenrecorder.start();
-            break;
          default:
             print("Unknown request:", request);
             return response("Unknown request");
