@@ -121,8 +121,10 @@ export function NotificationsWindow() {
          <box
             $={(self) => {
                contentbox = self;
-               contentbox.connect("size-allocate", () => {
-                  const [_success, bounds] = contentbox.compute_bounds(win);
+               const updateInputRegion = () => {
+                  if (!win) return;
+                  const [success, bounds] = contentbox.compute_bounds(win);
+                  if (!success) return;
 
                   const height = bounds.get_height();
                   const width = bounds.get_width();
@@ -142,7 +144,11 @@ export function NotificationsWindow() {
                   );
 
                   win.get_native()?.get_surface()?.set_input_region(region);
-               });
+               };
+
+               contentbox.connect("notify::width", updateInputRegion);
+               contentbox.connect("notify::height", updateInputRegion);
+               contentbox.connect("map", updateInputRegion);
             }}
             orientation={Gtk.Orientation.VERTICAL}
             halign={halign()}
