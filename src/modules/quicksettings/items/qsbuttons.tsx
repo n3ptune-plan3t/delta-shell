@@ -260,7 +260,13 @@ export function QSButtons() {
       for (const button of buttons) {
          const Widget = Buttons[button];
          if (!Widget) {
-            console.error(`Failed create qsbutton: unknown name "${button}"`);
+            if (button === "screenrecord" || button === "weather") {
+               console.warn(
+                  `QuickSettings: skipping deprecated button "${button}"`,
+               );
+            } else {
+               console.error(`Failed create qsbutton: unknown name "${button}"`);
+            }
             continue;
          }
          const result = Widget();
