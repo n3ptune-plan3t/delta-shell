@@ -4,7 +4,6 @@ import { config, theme } from "./options";
 import { createBinding, For, onCleanup, This } from "ags";
 import { Gtk } from "ags/gtk4";
 import { qs_page_set } from "./src/modules/quicksettings/quicksettings";
-import { WeatherWindow } from "./src/windows/weather";
 import { QuickSettingsWindow } from "./src/windows/quicksettings";
 import { CalendarWindow } from "./src/windows/calendar";
 import { PowerMenuWindow, VerificationWindow } from "./src/windows/powermenu";
@@ -28,7 +27,6 @@ export const windows_names = {
    osd: "osd",
    powermenu: "powermenu",
    verification: "verification",
-   weather: "weather",
    calendar: "calendar",
    notificationslist: "notificationslist",
    volume: "volume",
@@ -59,7 +57,6 @@ export function windows() {
    CalendarWindow();
    PowerMenuWindow();
    VerificationWindow();
-   if (config.weather.enabled) hasBarItem("weather") && WeatherWindow();
    if (config.notifications.enabled) {
       hasBarItem("notificationslist") && NotificationsListWindow();
       NotificationsWindow();

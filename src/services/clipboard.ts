@@ -5,7 +5,6 @@ import { monitorFile } from "ags/file";
 import GLib from "gi://GLib?version=2.0";
 import { subprocess } from "ags/process";
 import Gio from "gi://Gio?version=2.0";
-import { timeout } from "ags/time";
 
 const cacheDir = GLib.get_user_cache_dir();
 
@@ -64,11 +63,11 @@ export default class Clipboard extends GObject.Object {
 
    private scheduleUpdate() {
       if (this.updating) return;
-
       this.updating = true;
-      timeout(500, () => {
+      GLib.idle_add(GLib.PRIORITY_DEFAULT_IDLE, () => {
          this.updating = false;
          this.update();
+         return GLib.SOURCE_REMOVE;
       });
    }
 
