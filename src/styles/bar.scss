@@ -275,14 +275,16 @@ window#bar {
          .indicator {
             transition: background $transition;
             background: $accent;
+            box-shadow: 0 0 0 2px rgba($accent, 0.85);
          }
       }
 
       .indicator {
          border-radius: $widget-radius;
-         min-width: 4px;
-         min-height: 4px;
-         background: lighten($bar-button-bg-active, 20%);
+         min-width: 6px;
+         min-height: 6px;
+         background: rgba($accent, 0.35);
+         box-shadow: 0 0 0 1px rgba($accent, 0.6);
          transition: min-width $transition;
       }
 
