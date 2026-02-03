@@ -3,9 +3,7 @@ import { Workspaces } from "./items/workspaces";
 import { Clock } from "./items/clock";
 import { Launcher } from "./items/launcher";
 import { Tray } from "./items/tray";
-import { RecordIndicator } from "./items/recordindicator";
 import { Keyboard } from "./items/keyboard";
-import { Weather } from "./items/weather";
 import { config, theme } from "@/options";
 import { windows_names } from "@/windows";
 import { Volume } from "./items/volume";
@@ -17,8 +15,6 @@ import { Clipboard } from "./items/clipboard";
 import { PowerMenu } from "./items/powermenu";
 import { NotificationsList } from "./items/notificationslist";
 import { Separator } from "./items/separator";
-import { CPU } from "./items/cpu";
-import { RAM } from "./items/ram";
 import { Microphone } from "./items/microphone";
 
 const { position, modules, size } = config.bar;
@@ -38,8 +34,6 @@ export function BarModule({
       clock: () => <Clock />,
       tray: () => <Tray />,
       keyboard: () => <Keyboard />,
-      recordindicator: () => <RecordIndicator />,
-      weather: () => <Weather />,
       notificationslist: () => <NotificationsList />,
       volume: () => <Volume />,
       network: () => <Network />,
@@ -49,8 +43,6 @@ export function BarModule({
       clipboard: () => <Clipboard />,
       powermenu: () => <PowerMenu />,
       separator: () => <Separator />,
-      cpu: () => <CPU />,
-      ram: () => <RAM />,
       microphone: () => <Microphone />,
    } as Record<string, any>;
 

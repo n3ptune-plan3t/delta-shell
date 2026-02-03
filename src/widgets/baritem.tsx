@@ -14,7 +14,6 @@ import { windows_names } from "@/windows";
 import AstalHyprland from "gi://AstalHyprland?version=0.1";
 import AstalNiri from "gi://AstalNiri?version=0.1";
 import AstalWp from "gi://AstalWp?version=0.1";
-import ScreenRecorder from "@/src/services/screenrecorder";
 import { compositor } from "../lib/compositor";
 
 type FormatData = Record<string, JSX.Element>;
@@ -33,7 +32,6 @@ type BarItemProps = JSX.IntrinsicElements["box"] & {
 
 let speaker: AstalWp.Endpoint | undefined;
 let microphone: AstalWp.Endpoint | undefined;
-let screenRecord: ScreenRecorder | undefined;
 let hyprland: AstalHyprland.Hyprland | undefined;
 
 function getSpeaker() {
@@ -47,11 +45,6 @@ function getMicrophone() {
    return microphone;
 }
 
-function getScreenRecorder() {
-   if (!screenRecord) screenRecord = ScreenRecorder.get_default();
-   return screenRecord;
-}
-
 function getHyprland() {
    if (!hyprland) hyprland = AstalHyprland.get_default();
    return hyprland;
@@ -63,7 +56,6 @@ export const FunctionsList = {
    "toggle-calendar": () => toggleWindow(windows_names.calendar),
    "toggle-powermenu": () => toggleWindow(windows_names.powermenu),
    "toggle-clipboard": () => toggleWindow(windows_names.clipboard),
-   "toggle-weather": () => toggleQsModule(windows_names.weather),
    "toggle-notifs": () => toggleQsModule(windows_names.notificationslist),
    "toggle-volume": () =>
       toggleQsModule(
@@ -104,13 +96,6 @@ export const FunctionsList = {
       if (mcph) mcph.set_mute(!mcph.get_mute());
    },
    "switch-language": () => compositor.keyboard.switchLayout(),
-   "screenrecord-toggle": () => {
-      const sr = getScreenRecorder();
-      if (sr) {
-         if (sr.recording) sr.stop();
-         else sr.start();
-      }
-   },
 } as Record<string, any>;
 
 function parseFormat(format: string, data: FormatData): JSX.Element[] {

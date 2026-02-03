@@ -13,7 +13,7 @@ export const config = mkOptions(configFile, {
       modules: {
          start: ["launcher", "workspaces"],
          center: ["clock"],
-         end: ["recordindicator", "tray", "keyboard", "quicksettings"],
+         end: ["tray", "keyboard", "quicksettings"],
          launcher: {
             format: "{icon}",
             "on-click": "toggle-launcher" as string | null,
@@ -82,18 +82,6 @@ export const config = mkOptions(configFile, {
             "on-scroll-up": "microphone-up" as string | null,
             "on-scroll-down": "microphone-down" as string | null,
          },
-         weather: {
-            format: "{icon} {temp}{temp-units}",
-            "on-click": "toggle-weather" as string | null,
-            "on-click-right": null as string | null,
-            "on-click-middle": null as string | null,
-         },
-         recordindicator: {
-            format: "{icon}",
-            "on-click": "screenrecord-toggle" as string | null,
-            "on-click-right": null as string | null,
-            "on-click-middle": null as string | null,
-         },
          notifications: {
             format: "{icon}",
             "on-click": "toggle-notifs" as string | null,
@@ -112,15 +100,13 @@ export const config = mkOptions(configFile, {
             "on-click-right": null as string | null,
             "on-click-middle": null as string | null,
          },
-         cpu: { format: "{icon} {usage}" },
-         ram: { format: "{icon} {usage}" },
          tray: {
             compact: true,
          },
       },
    },
    quicksettings: {
-      buttons: ["network", "bluetooth", "notifications", "screenrecord"],
+      buttons: ["network", "bluetooth", "notifications"],
       sliders: ["volume", "brightness"],
    },
    launcher: {
@@ -166,14 +152,6 @@ export const config = mkOptions(configFile, {
       width: 400,
       list: {
          height: 500,
-      },
-   },
-   weather: {
-      enabled: true,
-      location: {
-         auto: false,
-         coords: null as { latitude: string; longitude: string } | null,
-         city: "Minsk" as string | null,
       },
    },
 });

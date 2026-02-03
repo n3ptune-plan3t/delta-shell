@@ -9,7 +9,6 @@ import { windows_names } from "@/windows";
 import { config } from "@/options";
 import AstalNetwork from "gi://AstalNetwork?version=0.1";
 import AstalBluetooth from "gi://AstalBluetooth?version=0.1";
-import { WeatherPage } from "./pages/weather";
 import { NotificationsListPage } from "./pages/notificationslist";
 export const [qs_page, qs_page_set] = createState("main");
 
@@ -39,8 +38,7 @@ export function QuickSettingsModule() {
          {bluetooth.adapter !== null && <BluetoothPage />}
          <PowerPage />
          <VolumePage />
-         {config.notifications.enabled && <WeatherPage />}
          {config.notifications.enabled && <NotificationsListPage />}
-      </stack>
+     </stack>
    );
 }

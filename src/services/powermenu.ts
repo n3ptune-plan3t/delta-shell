@@ -3,7 +3,6 @@ import { windows_names } from "@/windows";
 import GObject, { getter, property, register, signal } from "ags/gobject";
 import app from "ags/gtk4/app";
 import GLib from "gi://GLib?version=2.0";
-import { Timer } from "../lib/timer";
 import { bash } from "../lib/utils";
 import { timeout } from "ags/time";
 
@@ -27,17 +26,12 @@ export default class PowerMenu extends GObject.Object {
 
    constructor() {
       super();
-      this.#timer.subscribe(async () => {
-         if (this.#timer.timeLeft <= 0) {
-            this.executeCommand();
-         }
-      });
    }
 
    #title = "";
    #label = "";
    #cmd = "";
-   #timer = new Timer(60 * 1000);
+   #countdown: ReturnType<typeof timeout> | null = null;
 
    @getter(String)
    get title() {
@@ -54,18 +48,19 @@ export default class PowerMenu extends GObject.Object {
       return this.#cmd;
    }
 
-   get timer() {
-      return this.#timer;
+   private cancelCountdown() {
+      this.#countdown?.cancel();
+      this.#countdown = null;
    }
 
    async executeCommand() {
-      this.#timer.cancel();
+      this.cancelCountdown();
       await bash(this.#cmd);
       app.get_window(windows_names.verification)?.hide();
    }
 
    cancelAction() {
-      this.#timer.cancel();
+      this.cancelCountdown();
       app.get_window(windows_names.verification)?.hide();
    }
 
@@ -99,7 +94,9 @@ export default class PowerMenu extends GObject.Object {
       app.get_window(windows_names.powermenu)?.hide();
       app.get_window(windows_names.verification)?.show();
 
-      this.#timer.reset();
-      this.#timer.start();
+      this.cancelCountdown();
+      this.#countdown = timeout(60 * 1000, () => {
+         this.executeCommand();
+      });
    }
 }

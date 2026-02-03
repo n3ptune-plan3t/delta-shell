@@ -12,7 +12,6 @@ import GLib from "gi://GLib";
 import giCairo from "gi://cairo";
 import { config, theme } from "@/options";
 import { windows_names } from "@/windows";
-import { timeout } from "ags/time";
 import {
    Notification,
    PopupNotification,
@@ -101,29 +100,43 @@ export function NotificationsWindow() {
       }
    }
 
-   const unsub = notifications.subscribe(() => {
-      timeout(100, () => {
-         const [_success, bounds] = contentbox.compute_bounds(win);
+   let inputRegionScheduled = false;
+   const updateInputRegion = () => {
+      const [_success, bounds] = contentbox.compute_bounds(win);
 
-         const height = bounds.get_height();
-         const width = bounds.get_width();
-         const x = bounds.get_x();
-         const y = bounds.get_y();
+      const height = bounds.get_height();
+      const width = bounds.get_width();
+      const x = bounds.get_x();
+      const y = bounds.get_y();
 
-         const region = new giCairo.Region();
+      const region = new giCairo.Region();
 
-         // @ts-expect-error
-         region.unionRectangle(
-            new giCairo.Rectangle({
-               x,
-               y,
-               width,
-               height,
-            }),
-         );
+      // @ts-expect-error
+      region.unionRectangle(
+         new giCairo.Rectangle({
+            x,
+            y,
+            width,
+            height,
+         }),
+      );
 
-         win.get_native()?.get_surface()?.set_input_region(region);
+      win.get_native()?.get_surface()?.set_input_region(region);
+   };
+
+   const scheduleInputRegionUpdate = () => {
+      if (inputRegionScheduled) return;
+      inputRegionScheduled = true;
+      GLib.idle_add(GLib.PRIORITY_DEFAULT_IDLE, () => {
+         inputRegionScheduled = false;
+         updateInputRegion();
+         return GLib.SOURCE_REMOVE;
       });
+   };
+
+   const unsub = notifications.subscribe(() => {
+      contentbox.queue_resize();
+      scheduleInputRegionUpdate();
    });
 
    return (
@@ -140,7 +153,10 @@ export function NotificationsWindow() {
          }}
       >
          <box
-            $={(self) => (contentbox = self)}
+            $={(self) => {
+               contentbox = self;
+               scheduleInputRegionUpdate();
+            }}
             orientation={Gtk.Orientation.VERTICAL}
             halign={halign()}
             valign={valign()}
