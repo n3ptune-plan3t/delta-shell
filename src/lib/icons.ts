@@ -53,6 +53,7 @@ export const icons = {
       reboot: "ds-refresh-cw-symbolic",
       logout: "ds-log-out-symbolic",
       shutdown: "ds-power-symbolic",
+      lock: "system-lock-screen-symbolic",
    } as Record<string, any>,
    volume: {
       muted: "ds-volume-x-symbolic",

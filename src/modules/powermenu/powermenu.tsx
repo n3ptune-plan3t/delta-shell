@@ -27,7 +27,7 @@ function MenuButton({ icon, label, clicked }: MenuButtonProps) {
    );
 }
 
-const list = ["Sleep", "Logout", "Reboot", "Shutdown"];
+const list = ["Lock", "Sleep", "Logout", "Reboot", "Shutdown"];
 
 export function PowerMenuModule() {
    console.log("PowerMenu: initializing module");

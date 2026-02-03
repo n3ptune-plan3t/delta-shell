@@ -9,10 +9,11 @@ import { timeout } from "ags/time";
 const user = await GLib.getenv("USER");
 
 const commands = {
-   sleep: "systemctl suspend",
-   reboot: "systemctl reboot",
+   sleep: "gtklock & sleep 1; loginctl suspend",
+   reboot: "loginctl reboot",
    logout: `loginctl terminate-user ${user}`,
-   shutdown: "shutdown now",
+   shutdown: "loginctl poweroff",
+   lock: "gtklock",
 };
 
 @register({ GTypeName: "PowerMenu" })
@@ -85,6 +86,11 @@ export default class PowerMenu extends GObject.Object {
             commands.shutdown,
             "Shutdown",
             "The system will shutdown automatically in 60 seconds",
+         ],
+         Lock: [
+            commands.lock,
+            "Lock",
+            "The desktop will lock automatically in 60 seconds",
          ],
       }[action]!;
 
