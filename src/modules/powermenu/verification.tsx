@@ -1,4 +1,4 @@
-import Gtk from "gi://Gtk";
+import Gtk from "gi://Gtk?version=4.0";
 import PowerMenu from "@/src/services/powermenu";
 import { createBinding } from "ags";
 import { hideWindows, windows_names } from "@/windows";

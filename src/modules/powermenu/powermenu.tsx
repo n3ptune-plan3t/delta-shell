@@ -1,4 +1,4 @@
-import Gtk from "gi://Gtk";
+import Gtk from "gi://Gtk?version=4.0";
 import { icons } from "@/src/lib/icons";
 import PowerMenu from "@/src/services/powermenu";
 import { windows_names } from "@/windows";
@@ -34,13 +34,20 @@ export function PowerMenuModule() {
 
    return (
       <box spacing={theme.spacing}>
-         {list.map((value) => (
-            <MenuButton
-               icon={icons.powermenu[value.toLowerCase()]}
-               label={value}
-               clicked={() => powermenu.action(value)}
-            />
-         ))}
+         {list.map((value) => {
+            const icon =
+               value === "Lock"
+                  ? "ds-lock-symbolic"
+                  : icons.powermenu[value.toLowerCase()];
+
+            return (
+               <MenuButton
+                  icon={icon}
+                  label={value}
+                  clicked={() => powermenu.action(value)}
+               />
+            );
+         })}
       </box>
    );
 }
