@@ -42,6 +42,11 @@ export function Workspaces({ gdkmonitor }: { gdkmonitor: Gdk.Monitor }) {
          return classes;
       });
 
+      const isFocused = focusedWindow(
+         (focused) =>
+            focused && compositor.windowId(focused) === compositor.windowId(win),
+      );
+
       const hasIndicator = conf["window-format"].includes("{indicator}");
       const formatWithoutIndicator = conf["window-format"]
          .replace(/\{indicator\}\s*/g, "")
@@ -50,28 +55,15 @@ export function Workspaces({ gdkmonitor }: { gdkmonitor: Gdk.Monitor }) {
          ? formatWithoutIndicator
          : "{icon}";
 
-      const indicatorValign =
-         config.bar.position === "top"
-            ? Gtk.Align.START
-            : config.bar.position === "bottom"
-              ? Gtk.Align.END
-              : Gtk.Align.CENTER;
-
-      const indicatorHalign =
-         config.bar.position === "left"
-            ? Gtk.Align.START
-            : config.bar.position === "right"
-              ? Gtk.Align.END
-              : Gtk.Align.CENTER;
-
       return (
          <overlay hexpand={isVertical} cssClasses={classes}>
             {hasIndicator && (
                <box
                   $type="overlay"
                   class="indicator"
-                  valign={indicatorValign}
-                  halign={indicatorHalign}
+                  valign={Gtk.Align.START}
+                  halign={Gtk.Align.FILL}
+                  visible={isFocused}
                   vexpand
                   hexpand
                />
