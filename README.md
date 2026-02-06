@@ -4,6 +4,16 @@ A desktop shell based on [Ags](https://github.com/Aylur/ags). Currently supports
 ![image](https://sinomor.github.io/delta-shell-docs/assets/1.Dk8DoK2r.png)
 ![image](https://sinomor.github.io/delta-shell-docs/assets/2.RA-2ANnk.png)
 
+## AI-generated fork notice
+
+This repository is an AI-generated fork of the original Delta Shell project. Expect differences in behavior, styling, and implementation details compared to upstream. Please verify changes before production use.
+
+## Fork changelog (summary)
+
+- Fork created as an AI-generated derivative of Delta Shell.
+- Taskbar indicator now only appears on focused windows, using the accent-colored `ds-check-symbolic` icon.
+- Powermenu lock action uses the `ds-lock-symbolic` icon.
+
 ## Documentation
 
 More information about Delta Shell you can find at [docs website](https://sinomor.github.io/delta-shell-docs/)
