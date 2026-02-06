@@ -37,7 +37,7 @@ export function PowerMenuModule() {
          {list.map((value) => {
             const icon =
                value === "Lock"
-                  ? icons.powermenu.lock
+                  ? "ds-lock-symbolic"
                   : icons.powermenu[value.toLowerCase()];
 
             return (
