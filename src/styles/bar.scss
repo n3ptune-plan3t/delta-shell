@@ -273,22 +273,16 @@ window#bar {
 
       &.focused {
          .indicator {
-            transition: background $transition;
             background: $accent;
-            box-shadow: 0 0 0 2px rgba($accent, 0.85),
-               0 0 6px rgba($accent, 0.8);
+            transition: background $transition;
          }
       }
 
       .indicator {
-         border-radius: 2px;
-         min-width: 9px;
-         min-height: 9px;
-         background: rgba($accent, 0.45);
-         box-shadow: 0 0 0 2px rgba($accent, 0.6);
-         transform: rotate(45deg);
-         transition: min-width $transition, min-height $transition,
-            transform $transition;
+         min-height: 4px;
+         min-width: 100%;
+         border-radius: 999px;
+         background: $accent;
       }
 
       .content {
