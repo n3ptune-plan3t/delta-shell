@@ -1,6 +1,6 @@
 import { timeout } from "ags/time";
 import Wp from "gi://AstalWp";
-import Gtk from "gi://Gtk";
+import Gtk from "gi://Gtk?version=4.0";
 import { icons, VolumeIcon } from "@/src/lib/icons";
 import { Accessor, createState, onCleanup } from "ags";
 import Brightness from "@/src/services/brightness";

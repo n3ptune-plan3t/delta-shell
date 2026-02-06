@@ -1,4 +1,4 @@
-import Gtk from "gi://Gtk";
+import Gtk from "gi://Gtk?version=4.0";
 import { NetworkPage } from "./pages/network";
 import { MainPage } from "./pages/main";
 import { BluetoothPage } from "./pages/bluetooth";

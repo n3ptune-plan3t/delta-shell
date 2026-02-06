@@ -1,5 +1,5 @@
 import Pango from "gi://Pango";
-import Gtk from "gi://Gtk";
+import Gtk from "gi://Gtk?version=4.0";
 import AstalNotifd from "gi://AstalNotifd";
 import GLib from "gi://GLib?version=2.0";
 import { isIcon, fileExists } from "@/src/lib/utils";
