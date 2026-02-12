@@ -31,10 +31,18 @@ setup_wayland_fractional_scaling() {
         export GDK_BACKEND="wayland"
     fi
 
-    # Avoid forcing legacy integer/DPI scaling env vars, which bypass native
-    # compositor-provided fractional scale negotiation.
+    # Avoid integer-only scaling override; keep room for fractional DPI override.
     unset GDK_SCALE
-    unset GDK_DPI_SCALE
+
+    # Optional fractional app-scale override (e.g. 1.25, 1.5).
+    # When unset, GTK follows compositor/native protocol scaling.
+    if [[ -n "$DELTA_SHELL_SCALE" ]]; then
+        if [[ "$DELTA_SHELL_SCALE" =~ ^[0-9]+([.][0-9]+)?$ ]]; then
+            export GDK_DPI_SCALE="$DELTA_SHELL_SCALE"
+        else
+            echo "delta-shell: ignoring invalid DELTA_SHELL_SCALE='$DELTA_SHELL_SCALE' (expected float like 1.25)" >&2
+        fi
+    fi
 }
 
 print_help() {
