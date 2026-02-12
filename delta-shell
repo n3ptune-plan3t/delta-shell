@@ -25,6 +25,18 @@ run_and_check() {
     fi
 }
 
+setup_wayland_fractional_scaling() {
+    # Keep GTK on native Wayland so it can use wp_fractional_scale_v1 when available.
+    if [[ -n "$WAYLAND_DISPLAY" ]]; then
+        export GDK_BACKEND="wayland"
+    fi
+
+    # Avoid forcing legacy integer/DPI scaling env vars, which bypass native
+    # compositor-provided fractional scale negotiation.
+    unset GDK_SCALE
+    unset GDK_DPI_SCALE
+}
+
 print_help() {
     cat <<EOF
 Usage: $(basename "$0") <command> [options]
@@ -54,6 +66,7 @@ main() {
 
     case $1 in
         run)
+            setup_wayland_fractional_scaling
             if [ "$IS_DEV" = true ]; then
                 exec ags run -d "$DATADIR" --define DATADIR=null
             else
@@ -65,6 +78,7 @@ main() {
             ;;
         restart)
             ags -i delta-shell quit
+            setup_wayland_fractional_scaling
             if [ "$IS_DEV" = true ]; then
                 exec ags run -d "$DATADIR" --define DATADIR=null
             else
