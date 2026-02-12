@@ -7,6 +7,7 @@ const themeFile = `${configDir}/delta-shell/theme.json`;
 
 export const config = mkOptions(configFile, {
    transition: 0.2,
+   interfaceScale: 1.0,
    bar: {
       size: 48,
       position: "top" as "top" | "bottom" | "left" | "right",
