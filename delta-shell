@@ -54,6 +54,9 @@ main() {
 
     case $1 in
         run)
+            # Force native Wayland backend so GTK uses Wayland fractional scaling
+            # (wp_fractional_scale_v1) instead of blurry X11/XWayland compositor scaling.
+            export GDK_BACKEND="wayland"
             if [ "$IS_DEV" = true ]; then
                 exec ags run -d "$DATADIR" --define DATADIR=null
             else
@@ -65,6 +68,7 @@ main() {
             ;;
         restart)
             ags -i delta-shell quit
+            export GDK_BACKEND="wayland"
             if [ "$IS_DEV" = true ]; then
                 exec ags run -d "$DATADIR" --define DATADIR=null
             else

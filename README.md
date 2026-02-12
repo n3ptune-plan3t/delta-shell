@@ -13,6 +13,7 @@ This repository is an AI-generated fork of the original Delta Shell project. Exp
 - Fork created as an AI-generated derivative of Delta Shell.
 - Taskbar indicator now only appears on focused windows, using the accent-colored `ds-check-symbolic` icon.
 - Powermenu lock action uses the `ds-lock-symbolic` icon.
+- Launcher now forces `GDK_BACKEND=wayland` so GTK runs as a native Wayland client and uses Wayland fractional scaling (`wp_fractional_scale_v1`) when compositor/toolkit support is available.
 
 ## Documentation
 
