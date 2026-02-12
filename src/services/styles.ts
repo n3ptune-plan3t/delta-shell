@@ -6,12 +6,14 @@ import { config, theme } from "@/options";
 import { isVertical } from "../modules/bar/bar";
 
 const { spacing, radius, window, bar } = theme;
+const uiScale = Math.max(config.interfaceScale, 0.5);
+const scaled = (value: number) => value * uiScale;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const $ = (name: string, value: string) => `$${name}: ${value};`;
 
 const variables = () => [
-   $("font-size", `${theme.font.size}pt`),
+   $("font-size", `${scaled(theme.font.size)}pt`),
    $("font-name", `${theme.font.name}`),
 
    $("bg0", theme.colors.bg[0]),
@@ -40,36 +42,36 @@ const variables = () => [
    $("purple", theme.colors.purple),
    $("purple-light", `lighten(${theme.colors.purple}, 10%)`),
 
-   $("widget-radius", `${radius}px`),
+   $("widget-radius", `${scaled(radius)}px`),
 
-   $("window-padding", `${window.padding}px`),
+   $("window-padding", `${scaled(window.padding)}px`),
    $(
       "window-radius",
-      `${radius === 0 ? radius : radius + window.padding + window.border.width}px`,
+      `${radius === 0 ? 0 : scaled(radius + window.padding + window.border.width)}px`,
    ),
    $("window-opacity", `${window.opacity}`),
-   $("window-border-width", `${window.border.width}px`),
+   $("window-border-width", `${scaled(window.border.width)}px`),
    $("window-border-color", `${window.border.color}`),
-   $("window-outline-width", `${window.outline.width}px`),
+   $("window-outline-width", `${scaled(window.outline.width)}px`),
    $("window-outline-color", `${window.outline.color}`),
-   $("window-shadow-offset", `${toCssValue(window.shadow.offset)}`),
-   $("window-shadow-blur", `${window.shadow.blur}px`),
-   $("window-shadow-spread", `${window.shadow.spread}px`),
+   $("window-shadow-offset", `${toCssValue(window.shadow.offset.map((v) => scaled(v)) as [number, number])}`),
+   $("window-shadow-blur", `${scaled(window.shadow.blur)}px`),
+   $("window-shadow-spread", `${scaled(window.shadow.spread)}px`),
    $("window-shadow-color", `${window.shadow.color}`),
    $("window-shadow-opacity", `${window.shadow.opacity}`),
 
    $("bar-position", config.bar.position),
    $("bar-bg", `${bar.bg}`),
    $("bar-opacity", `${bar.opacity}`),
-   $("bar-margin", `${toCssValue(bar.margin)}`),
-   $("bar-margin-top", `${bar.margin[0]}px`),
-   $("bar-margin-right", `${bar.margin[1]}px`),
-   $("bar-margin-bottom", `${bar.margin[2]}px`),
-   $("bar-margin-left", `${bar.margin[3]}px`),
-   $("bar-padding", `${bar.padding}px`),
-   $("bar-border-width", `${bar.border.width}px`),
+   $("bar-margin", `${toCssValue(bar.margin.map((v) => scaled(v)) as [number, number, number, number])}`),
+   $("bar-margin-top", `${scaled(bar.margin[0])}px`),
+   $("bar-margin-right", `${scaled(bar.margin[1])}px`),
+   $("bar-margin-bottom", `${scaled(bar.margin[2])}px`),
+   $("bar-margin-left", `${scaled(bar.margin[3])}px`),
+   $("bar-padding", `${scaled(bar.padding)}px`),
+   $("bar-border-width", `${scaled(bar.border.width)}px`),
    $("bar-border-color", `${bar.border.color}`),
-   $("bar-separator-width", `${bar.separator.width}px`),
+   $("bar-separator-width", `${scaled(bar.separator.width)}px`),
    $("bar-separator-color", `${bar.separator.color}`),
    $("bar-button-bg", `${bar.button.bg.default}`),
    $("bar-button-bg-hover", `${bar.button.bg.hover}`),
@@ -78,14 +80,14 @@ const variables = () => [
    $("bar-button-border-width", `${bar.button.border.width}px`),
    $("bar-button-border-color", `${bar.button.border.color}`),
    $("bar-button-opacity", `${bar.button.opacity}`),
-   $("bar-button-padding", `${toCssValue(bar.button.padding)}`),
-   $("bar-shadow-offset", `${toCssValue(bar.shadow.offset)}`),
-   $("bar-shadow-blur", `${bar.shadow.blur}px`),
-   $("bar-shadow-spread", `${bar.shadow.spread}px`),
+   $("bar-button-padding", `${toCssValue(bar.button.padding.map((v) => scaled(v)) as [number, number])}`),
+   $("bar-shadow-offset", `${toCssValue(bar.shadow.offset.map((v) => scaled(v)) as [number, number])}`),
+   $("bar-shadow-blur", `${scaled(bar.shadow.blur)}px`),
+   $("bar-shadow-spread", `${scaled(bar.shadow.spread)}px`),
    $("bar-shadow-color", `${bar.shadow.color}`),
    $("bar-shadow-opacity", `${bar.shadow.opacity}`),
    $("bar-vertical", `${isVertical}`),
-   $("bar-size", `${config.bar.size}px`),
+   $("bar-size", `${scaled(config.bar.size)}px`),
 
    $("transition", `${config.transition}s`),
    $("shadow", `${theme.shadow}`),
